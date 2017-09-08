@@ -1,6 +1,6 @@
 <?php
-
 use PHPUnit\Framework\TestCase;
+use Tictactoe\Gameplay;
 
 final class GameplayTest extends TestCase
 {
