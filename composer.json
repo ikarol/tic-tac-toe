@@ -1,0 +1,15 @@
+{
+    "name": "ikarol/tic-tac-toe",
+    "description": "tic tac toe developed using TDD",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Ivan Karol",
+            "email": "ikarol@gomel.iba.by"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
+    }
+}
