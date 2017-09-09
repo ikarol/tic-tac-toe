@@ -1,6 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Tictactoe;
+use Tictactoe\Exceptions\DrawException;
 use Tictactoe\Exceptions\OutOfFieldException;
 use Tictactoe\Exceptions\CellIsNotEmptyException;
 
@@ -126,6 +127,9 @@ class Gameplay
 
     private function isGameFinished(string $sign): bool
     {
+        if (empty($this->emptyBoard)) {
+            throw new DrawException();
+        }
         foreach ($this->winCombinations as $axis) {
             foreach ($axis as $type) {
                 if (count(array_intersect($type, $this->gameBoard[$sign])) != 3) {
