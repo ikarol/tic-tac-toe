@@ -3,6 +3,8 @@ use PHPUnit\Framework\TestCase;
 use Tictactoe\Gameplay;
 use Tictactoe\HumanPlayer;
 use Tictactoe\ComputerPlayer;
+use Tictactoe\Exceptions\CellIsNotEmptyException;
+use Tictactoe\Exceptions\OutOfFieldException;
 
 final class GameplayTest extends TestCase
 {
@@ -23,4 +25,33 @@ final class GameplayTest extends TestCase
         $game->playerOneTurn(1, 2);
         $this->assertEquals($human, $game->getWinner());
     }
+
+    /**
+     * @test
+     */
+    public function on_non_empty_cell_click()
+    {
+        $human = new HumanPlayer();
+        $computer = new ComputerPlayer();
+        $game = new Gameplay($human, $computer);
+        $this->assertEquals(true, $game->startGame());
+        $game->playerOneTurn(0, 2);
+        $this->assertEquals(false, $game->isCellEmpty(0, 2));
+        $this->expectException(CellIsNotEmptyException::class);
+        $game->playerTwoTurn(0, 2);
+    }
+
+    /**
+     * @test
+     */
+    public function on_out_of_field()
+    {
+        $human = new HumanPlayer();
+        $computer = new ComputerPlayer();
+        $game = new Gameplay($human, $computer);
+        $this->assertEquals(true, $game->startGame());
+        $this->expectException(OutOfFieldException::class);
+        $game->playerOneTurn(3, 5);
+    }
+
 }
