@@ -1,6 +1,7 @@
 <?php
 declare(strict_types = 1);
 namespace Tictactoe;
+use Tictactoe\Exceptions\OutOfFieldException;
 use Tictactoe\Exceptions\CellIsNotEmptyException;
 
 class Gameplay
@@ -21,7 +22,7 @@ class Gameplay
         '2, 1',
         '2, 2'
     ];
-    public $gameBoard = [
+    private $gameBoard = [
         'X' => [],
         'O' => [],
     ];
@@ -84,6 +85,9 @@ class Gameplay
 
     public function isCellEmpty(int $x, int $y): bool
     {
+        if (($x < 0 || $x > 2) || ($y < 0 || $y > 2)) {
+            throw new OutOfFieldException();
+        }
         return in_array("$x, $y", $this->emptyBoard, true);
     }
 
