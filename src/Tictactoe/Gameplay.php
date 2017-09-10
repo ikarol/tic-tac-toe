@@ -96,9 +96,14 @@ class Gameplay
         return true;
     }
 
-    public function getWinner()
+    public function getWinner(): Player
     {
         return $this->winner;
+    }
+
+    public function getEmptyBoard(): array
+    {
+        return $this->emptyBoard;
     }
 
     public function registerTurn(Player $player, string $coordinates)
