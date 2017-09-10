@@ -1,11 +1,12 @@
 <?php
 use PHPUnit\Framework\TestCase;
 use Tictactoe\Gameplay;
-use Tictactoe\HumanPlayer;
-use Tictactoe\ComputerPlayer;
+use Tictactoe\Players\HumanPlayer;
+use Tictactoe\Players\ComputerPlayer;
 use Tictactoe\Exceptions\CellIsNotEmptyException;
 use Tictactoe\Exceptions\OutOfFieldException;
 use Tictactoe\Exceptions\DrawException;
+use Tictactoe\Cell;
 
 final class GameplayTest extends TestCase
 {
@@ -18,12 +19,12 @@ final class GameplayTest extends TestCase
         $computer = new ComputerPlayer();
         $game = new Gameplay($human, $computer);
         $this->assertEquals(true, $game->startGame());
-        $game->playerOneTurn(1, 1);
+        $human->makeTurn(new Cell(1, 1));
         $this->assertEquals(false, $game->isCellEmpty(1, 1));
-        $game->playerTwoTurn(2, 1);
-        $game->playerOneTurn(1, 0);
-        $game->playerTwoTurn(2, 0);
-        $game->playerOneTurn(1, 2);
+        $computer->makeTurn(new Cell(2, 1));
+        $human->makeTurn(new Cell(1, 0));
+        $computer->makeTurn(new Cell(2, 0));
+        $human->makeTurn(new Cell(1, 2));
         $this->assertEquals($human, $game->getWinner());
     }
 
@@ -36,10 +37,10 @@ final class GameplayTest extends TestCase
         $computer = new ComputerPlayer();
         $game = new Gameplay($human, $computer);
         $this->assertEquals(true, $game->startGame());
-        $game->playerOneTurn(0, 2);
+        $human->makeTurn(new Cell(0, 2));
         $this->assertEquals(false, $game->isCellEmpty(0, 2));
         $this->expectException(CellIsNotEmptyException::class);
-        $game->playerTwoTurn(0, 2);
+        $computer->makeTurn(new Cell(0, 2));
     }
 
     /**
@@ -52,7 +53,7 @@ final class GameplayTest extends TestCase
         $game = new Gameplay($human, $computer);
         $this->assertEquals(true, $game->startGame());
         $this->expectException(OutOfFieldException::class);
-        $game->playerOneTurn(3, 5);
+        $human->makeTurn(new Cell(3, 5));
     }
 
     /**
@@ -64,16 +65,16 @@ final class GameplayTest extends TestCase
         $computer = new ComputerPlayer();
         $game = new Gameplay($human, $computer);
         $this->assertEquals(true, $game->startGame());
-        $game->playerOneTurn(0, 0);
-        $game->playerTwoTurn(0, 1);
-        $game->playerOneTurn(0, 2);
-        $game->playerTwoTurn(1, 0);
-        $game->playerOneTurn(1, 1);
-        $game->playerOneTurn(1, 2);
-        $game->playerTwoTurn(2, 1);
-        $game->playerOneTurn(2, 0);
+        $human->makeTurn(new Cell(0, 0));
+        $computer->makeTurn(new Cell(0, 1));
+        $human->makeTurn(new Cell(0, 2));
+        $computer->makeTurn(new Cell(1, 0));
+        $human->makeTurn(new Cell(1, 1));
+        $computer->makeTurn(new Cell(1, 2));
+        $human->makeTurn(new Cell(2, 1));
+        $computer->makeTurn(new Cell(2, 0));
         $this->expectException(DrawException::class);
-        $game->playerTwoTurn(2, 2);
+        $human->makeTurn(new Cell(2, 2));
     }
 
 }

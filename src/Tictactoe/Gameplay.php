@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace Tictactoe;
 use Tictactoe\Exceptions\DrawException;
-use Tictactoe\Exceptions\OutOfFieldException;
 use Tictactoe\Exceptions\CellIsNotEmptyException;
 
 class Gameplay
@@ -76,36 +75,19 @@ class Gameplay
         ]
     ];
 
-    public function __construct(IPlayer $playerOne, IPlayer $playerTwo)
+    public function __construct($playerOne, $playerTwo)
     {
         $this->playerOne = $playerOne;
+        $this->playerOne->setGame($this);
         $this->playerOneSign = 'X';
         $this->playerTwo = $playerTwo;
+        $this->playerTwo->setGame($this);
         $this->playerTwoSign = 'O';
     }
 
     public function isCellEmpty(int $x, int $y): bool
     {
-        if (($x < 0 || $x > 2) || ($y < 0 || $y > 2)) {
-            throw new OutOfFieldException();
-        }
         return in_array("$x, $y", $this->emptyBoard, true);
-    }
-
-    public function playerOneTurn(int $x, int $y)
-    {
-        if (!$this->isCellEmpty($x, $y)) {
-            throw new CellIsNotEmptyException();
-        }
-        $this->registerTurn('X', "$x, $y");
-    }
-
-    public function playerTwoTurn(int $x, int $y)
-    {
-        if (!$this->isCellEmpty($x, $y)) {
-            throw new CellIsNotEmptyException();
-        }
-        $this->registerTurn('O', "$x, $y");
     }
 
     public function startGame(): bool
@@ -118,8 +100,13 @@ class Gameplay
         return $this->winner;
     }
 
-    private function registerTurn(string $sign, string $coordinates)
+    public function registerTurn($player, string $coordinates)
     {
+        list($x, $y) = array_map('intval', explode(', ', $coordinates));
+        if (!$this->isCellEmpty($x, $y)) {
+            throw new CellIsNotEmptyException();
+        }
+        $sign = $this->getSignByPlayer($player);
         $this->gameBoard[$sign][] = $coordinates;
         unset($this->emptyBoard[array_search($coordinates, $this->emptyBoard)]);
         $this->isGameFinished($sign);
@@ -140,6 +127,15 @@ class Gameplay
             }
         }
         return false;
+    }
+
+    private function getSignByPlayer($player): string
+    {
+        if ($player === $this->playerOne) {
+            return 'X';
+        } elseif ($player === $this->playerTwo) {
+            return 'O';
+        }
     }
 
     private function setWinner(string $sign)
