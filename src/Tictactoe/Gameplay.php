@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Tictactoe;
 use Tictactoe\Exceptions\DrawException;
 use Tictactoe\Exceptions\CellIsNotEmptyException;
+use Tictactoe\Players\Player;
 
 class Gameplay
 {
@@ -75,7 +76,7 @@ class Gameplay
         ]
     ];
 
-    public function __construct($playerOne, $playerTwo)
+    public function __construct(Player $playerOne, Player $playerTwo)
     {
         $this->playerOne = $playerOne;
         $this->playerOne->setGame($this);
@@ -100,7 +101,7 @@ class Gameplay
         return $this->winner;
     }
 
-    public function registerTurn($player, string $coordinates)
+    public function registerTurn(Player $player, string $coordinates)
     {
         list($x, $y) = array_map('intval', explode(', ', $coordinates));
         if (!$this->isCellEmpty($x, $y)) {
@@ -129,7 +130,7 @@ class Gameplay
         return false;
     }
 
-    private function getSignByPlayer($player): string
+    private function getSignByPlayer(Player $player): string
     {
         if ($player === $this->playerOne) {
             return 'X';
