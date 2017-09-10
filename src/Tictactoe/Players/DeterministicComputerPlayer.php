@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace Tictactoe\Players;
 use Tictactoe\Cell;
 
-class HumanPlayer extends Player
+class DeterministicComputerPlayer extends Player
 {
 
     public function makeTurn(Cell $cell)

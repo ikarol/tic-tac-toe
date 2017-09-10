@@ -6,6 +6,8 @@ use Tictactoe\Gameplay;
 
 abstract class Player
 {
+    protected $game;
+
     abstract protected function makeTurn(Cell $cell);
 
     public function setGame(Gameplay $gameplay)
