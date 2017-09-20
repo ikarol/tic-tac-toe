@@ -21,4 +21,9 @@ class Cell
     {
         return [$this->x, $this->y];
     }
+
+    public function __toString(): string
+    {
+        return "{$this->x}, {$this->y}";
+    }
 }

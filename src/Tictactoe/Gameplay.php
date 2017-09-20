@@ -86,9 +86,9 @@ class Gameplay
         $this->playerTwoSign = 'O';
     }
 
-    public function isCellEmpty(int $x, int $y): bool
+    public function isCellEmpty(Cell $cell): bool
     {
-        return in_array("$x, $y", $this->emptyBoard, true);
+        return in_array((string)$cell, $this->emptyBoard, true);
     }
 
     public function startGame(): bool
@@ -106,33 +106,36 @@ class Gameplay
         return $this->emptyBoard;
     }
 
-    public function registerTurn(Player $player, string $coordinates)
+    public function registerTurn(Player $player, Cell $cell)
     {
-        list($x, $y) = array_map('intval', explode(', ', $coordinates));
-        if (!$this->isCellEmpty($x, $y)) {
+        if (!$this->isCellEmpty($cell)) {
             throw new CellIsNotEmptyException();
         }
         $sign = $this->getSignByPlayer($player);
-        $this->gameBoard[$sign][] = $coordinates;
-        unset($this->emptyBoard[array_search($coordinates, $this->emptyBoard)]);
-        $this->isGameFinished($sign);
-    }
-
-    private function isGameFinished(string $sign): bool
-    {
-        if (empty($this->emptyBoard)) {
-            throw new DrawException();
-        }
+        $this->gameBoard[$sign][] = (string)$cell;
+        unset($this->emptyBoard[array_search((string)$cell, $this->emptyBoard)]);
+        $this->emptyBoard = array_values($this->emptyBoard);
         foreach ($this->winCombinations as $axis) {
             foreach ($axis as $type) {
-                if (count(array_intersect($type, $this->gameBoard[$sign])) != 3) {
+                if (count(array_intersect($type, $this->gameBoard[$sign])) <> 3) {
                     continue;
                 }
                 $this->setWinner($sign);
-                return true;
+                break;
             }
         }
-        return false;
+        $this->isGameFinished();
+    }
+
+    private function isGameFinished(): bool
+    {
+        if (empty($this->winner)) {
+            if (empty($this->emptyBoard)) {
+                throw new DrawException();
+            }
+            return false;
+        }
+        return true;
     }
 
     private function getSignByPlayer(Player $player): string

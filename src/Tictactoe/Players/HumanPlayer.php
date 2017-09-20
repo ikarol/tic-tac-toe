@@ -8,7 +8,6 @@ class HumanPlayer extends Player
 
     public function makeTurn(Cell $cell)
     {
-        list($x, $y) = $cell->getCoordinates();
-        $this->game->registerTurn($this, "$x, $y");
+        $this->game->registerTurn($this, $cell);
     }
 }

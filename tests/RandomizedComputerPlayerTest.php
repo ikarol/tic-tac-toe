@@ -28,6 +28,8 @@ final class RandomizedComputerPlayerTest extends TestCase
         $game->startGame();
         $human->makeTurn(new Cell(1, 0));
         $computer->makeRandomizedTurn();
-        $this->assertEquals(7, count($game->getEmptyBoard()));
+        //breaking game rules a bit, to ensure that RCP will make one more turn
+        $computer->makeRandomizedTurn();
+        $this->assertEquals(6, count($game->getEmptyBoard()));
     }
 }

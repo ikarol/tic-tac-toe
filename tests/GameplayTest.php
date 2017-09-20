@@ -20,7 +20,7 @@ final class GameplayTest extends TestCase
         $game = new Gameplay($human, $computer);
         $this->assertEquals(true, $game->startGame());
         $human->makeTurn(new Cell(1, 1));
-        $this->assertEquals(false, $game->isCellEmpty(1, 1));
+        $this->assertEquals(false, $game->isCellEmpty(new Cell(1, 1)));
         $computer->makeTurn(new Cell(2, 1));
         $human->makeTurn(new Cell(1, 0));
         $computer->makeTurn(new Cell(2, 0));
@@ -38,7 +38,7 @@ final class GameplayTest extends TestCase
         $game = new Gameplay($human, $computer);
         $this->assertEquals(true, $game->startGame());
         $human->makeTurn(new Cell(0, 2));
-        $this->assertEquals(false, $game->isCellEmpty(0, 2));
+        $this->assertEquals(false, $game->isCellEmpty(new Cell(0, 2)));
         $this->expectException(CellIsNotEmptyException::class);
         $computer->makeTurn(new Cell(0, 2));
     }
@@ -67,14 +67,14 @@ final class GameplayTest extends TestCase
         $this->assertEquals(true, $game->startGame());
         $human->makeTurn(new Cell(0, 0));
         $computer->makeTurn(new Cell(0, 1));
-        $human->makeTurn(new Cell(0, 2));
-        $computer->makeTurn(new Cell(1, 0));
         $human->makeTurn(new Cell(1, 1));
-        $computer->makeTurn(new Cell(1, 2));
-        $human->makeTurn(new Cell(2, 1));
-        $computer->makeTurn(new Cell(2, 0));
+        $computer->makeTurn(new Cell(0, 2));
+        $human->makeTurn(new Cell(1, 2));
+        $computer->makeTurn(new Cell(1, 0));
+        $human->makeTurn(new Cell(2, 0));
+        $computer->makeTurn(new Cell(2, 2));
         $this->expectException(DrawException::class);
-        $human->makeTurn(new Cell(2, 2));
+        $human->makeTurn(new Cell(2, 1));
     }
 
 }

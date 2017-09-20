@@ -19,16 +19,15 @@ class RandomizedComputerPlayer extends Player
                 $coordinates = array_map('intval',  explode(', ', $board[mt_rand($min, $max)]));
                 list($x, $y) = $coordinates;
                 $this->makeTurn(new Cell($x, $y));
+                $cellIsEmpty = true;
             } catch (CellIsNotEmptyException $e) {
                 // do nothing
             }
-            $cellIsEmpty = true;
         }
     }
 
     protected function makeTurn(Cell $cell)
     {
-        list($x, $y) = $cell->getCoordinates();
-        $this->game->registerTurn($this, "$x, $y");
+        $this->game->registerTurn($this, $cell);
     }
 }
